@@ -154,8 +154,8 @@ th span { font-weight: 400; font-size: 0.8rem; color: var(--muted); }
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
+  grid-template-columns: 1fr;
+  gap: 32px;
   align-items: start;
   margin-top: 20px;
 }
@@ -321,7 +321,7 @@ summary {
 
 .pdf-frame {
   width: 100%;
-  height: 520px;
+  height: 780px;
   border: none;
   border-radius: 10px;
   display: block;
@@ -356,8 +356,8 @@ summary {
   .results-section, .wide-section { width: min(100% - 24px, 980px); }
   .table-wrap { overflow-x: auto; justify-content: flex-start; }
   table { min-width: 980px; font-size: 0.82rem; }
-  .gallery-grid { grid-template-columns: 1fr; }
   .gallery-image-box { height: auto; min-height: 240px; }
   .gallery-image-box img { height: auto; }
+  .pdf-frame { height: 480px; }
   .synthetic-row { flex-direction: column; }
 }
