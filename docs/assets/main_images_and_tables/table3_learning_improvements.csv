@@ -1,0 +1,11 @@
+Model Group,Approach,Overall Selection Acc. (%) ↑,Overall PE Trans. Err. (LDU) ↓,Overall PE Rot. Err. (°) ↓,Overall Step-Wise SR (%) ↑,Best Object Selection Acc. (%) ↑,Best Object PE Trans. Err. (LDU) ↓,Best Object PE Rot. Err. (°) ↓,Best Object Step-Wise SR (%) ↑
+Gemma-3-12B,Direct Prompting,4.35,269.09,63.00,0.09,17.24,41.86,12.86,2.22
+Gemma-3-12B,World Feedback (P),–,273.41,62.26,0.00,–,39.46,14.53,2.22
+Gemma-3-12B,Designer Supervision,15.59,201.51,55.69,0.72,26.67,36.91,15.00,4.44
+Gemma-3-12B,World Feedback (L),–,170.33,51.49,1.99,–,27.56,12.86,9.07
+Gemma-3-12B,Brick-Composer,17.95,123.69,45.43,4.35,52.87,24.63,12.86,18.75
+Qwen-3-8B-VL,Direct Prompting,22.76,210.14,62.47,0.36,55.17,43.81,12.86,4.44
+Qwen-3-8B-VL,World Feedback (P),–,226.33,65.66,0.27,–,42.36,12.86,4.44
+Qwen-3-8B-VL,Designer Supervision,48.29,162.82,57.81,5.40,73.24,27.13,12.95,8.92
+Qwen-3-8B-VL,World Feedback (L),–,137.26,52.65,6.24,–,21.46,11.64,15.36
+Qwen-3-8B-VL,Brick-Composer,68.21,65.63,37.97,14.27,90.65,14.29,0.00,41.63

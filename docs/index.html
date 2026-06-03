@@ -9,26 +9,15 @@
   <meta property="og:description" content="MLLMs Construct Everything from Building Blocks" />
   <meta property="og:image" content="assets/task_setting.webp" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <nav class="topbar" aria-label="Main navigation">
-    <a class="brand" href="#top"><span class="brick-dot"></span> Brick-Composer</a>
-    <div class="nav-links">
-      <a href="#abstract">Abstract</a>
-      <a href="#benchmark">BC-Bench</a>
-      <a href="#method">Method</a>
-      <a href="#results">Results</a>
-      <a href="#demo">Gallery</a>
-      <a href="#citation">Citation</a>
-    </div>
-  </nav>
-
-  <main id="top">
-    <section class="hero section-narrow">
-      <p class="venue">Project Page</p>
-      <h1>Brick-Composer</h1>
-      <h2>MLLMs Construct Everything from Building Blocks</h2>
+  <main>
+    <section class="hero section">
+      <h1>Brick-Composer: MLLMs Construct Everything from Building Blocks</h1>
 
       <p class="authors">
         <span>Jiateng Liu</span><sup>1</sup>,
@@ -47,163 +36,184 @@
         <sup>1</sup>UIUC &nbsp;&nbsp; <sup>2</sup>Stevens Institute of Technology &nbsp;&nbsp; <sup>3</sup>Northwestern University
       </p>
 
-      <div class="button-row">
-        <a class="pill" href="assets/Brick-Composer-paper.pdf">Paper</a>
-        <a class="pill" href="https://github.com/Lumos-Jiateng/Brick-Composer">Code</a>
-        <a class="pill ghost" href="#results">Results</a>
-        <a class="pill ghost" href="#demo">Demos</a>
+      <div class="links">
+        <a href="assets/Brick-Composer-paper.pdf">Paper</a>
+        <a href="https://github.com/Lumos-Jiateng/Brick-Composer">Code</a>
+        <a href="#results">Results</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#assets">Assets</a>
       </div>
 
-      <figure class="hero-media card">
+      <figure class="project-figure hero-figure">
         <img src="assets/task_setting.webp" alt="Overview of BC-Bench task setting for brick selection and brick pose estimation" />
         <figcaption>
-          BC-Bench evaluates two coupled assembly abilities: selecting the next brick from a candidate grid and estimating its 3D pose in an evolving structure.
+          <strong>Figure 1:</strong> Overview of the BC-Bench task setting. <strong>Left:</strong> Brick selection. The model selects the required brick from a candidate grid using manual images. <strong>Right:</strong> Brick pose estimation. Given the manual context, current assembly state, and selected brick, the model predicts the brick’s target pose as a translation vector and rotation matrix.
         </figcaption>
       </figure>
     </section>
 
-    <section id="abstract" class="section-narrow">
-      <h2 class="section-title">Abstract</h2>
+    <section id="abstract" class="section text-section">
+      <h2>Abstract</h2>
       <p>
-        We study whether multimodal large language models can read arbitrary designs and construct real-world objects from reusable building blocks. We formulate brick assembly as a sequential decision-making problem with two subtasks: <strong>brick selection</strong>, which identifies the target component, and <strong>brick pose estimation</strong>, which predicts where and how the selected brick should be placed.
+        We dream of AI agents that can read arbitrary designs and construct real-world objects from reusable building blocks. As a first step toward this vision, we study whether multimodal large language models (MLLMs) possess the visual grounding and spatial reasoning capabilities required for brick assembly. We formulate brick assembly as a sequential decision-making problem, where each step involves two subtasks: <strong>brick selection</strong>, identifying the target brick from candidate components, and <strong>brick pose estimation</strong>, predicting where and how the selected brick should be placed.
       </p>
       <p>
-        We introduce <strong>BC-Bench</strong>, a benchmark for evaluating MLLMs on assembly with diverse bricks, and show that current MLLMs struggle with fine-grained part selection and precise spatial placement. To bridge this gap, we propose <strong>Brick-Composer</strong>, a learning framework that combines Human Design Sparks, World Feedback, and Synthetic Experience. Brick-Composer improves brick selection accuracy by over three times, substantially reduces pose errors, and raises strict step-level assembly success from less than 1% to around 15%.
+        To support this study, we introduce <strong>BC-Bench</strong> (Brick Construction Benchmark), a benchmark for evaluating MLLMs on assembly with diverse bricks. We further propose <strong>Brick-Composer</strong>, a learning framework that equips MLLMs with assembly skills through Human Design Sparks, World Feedback, and Synthetic Experience. Brick-Composer improves brick selection accuracy by over three times, substantially reduces pose estimation errors, and raises strict step-level assembly success from less than 1% to around 15%.
       </p>
-      <div class="stats-grid" aria-label="Key results">
-        <div class="stat-card"><strong>BC-Bench</strong><span>diverse brick assembly benchmark</span></div>
-        <div class="stat-card"><strong>3 signals</strong><span>human design, feedback, synthetic experience</span></div>
-        <div class="stat-card"><strong>68.21%</strong><span>Qwen-3-VL-8B selection accuracy</span></div>
-        <div class="stat-card"><strong>14.27%</strong><span>average strict step-wise success</span></div>
-      </div>
     </section>
 
-    <section id="benchmark" class="section-wide soft-section">
-      <div class="section-narrow inner">
-        <h2 class="section-title">BC-Bench: Assembly with Diverse Bricks</h2>
-        <p>
-          BC-Bench turns LEGO-style construction into a controlled multimodal reasoning benchmark. Each step provides manual views, candidate brick views, current assembly state, and selected brick geometry. The model must localize the right brick and predict the translation and rotation needed to place it.
-        </p>
-        <figure class="card image-card">
-          <img src="assets/benchmark_examples.webp" alt="Assembly target examples for a lion and little bonsai with top, front, right, and bottom manual views" />
-          <figcaption>
-            Example assembly trajectories. Red boxes highlight the brick to add at each step, while multi-view manuals expose geometric and affordance cues.
-          </figcaption>
-        </figure>
-
-        <div class="two-col">
-          <div class="mini-card">
-            <h3>Brick Selection</h3>
-            <p>The model predicts the row and column of the next brick from a candidate grid. The task becomes difficult when many parts share similar colors, shapes, or functions.</p>
-          </div>
-          <div class="mini-card">
-            <h3>Pose Estimation</h3>
-            <p>Given the current structure and selected brick, the model predicts a 3D translation vector and rotation matrix in the target-object coordinate system.</p>
-          </div>
-        </div>
-      </div>
+    <section id="benchmark" class="section">
+      <h2>BC-Bench: Assembly with Diverse Bricks</h2>
+      <p class="section-text">
+        BC-Bench evaluates whether MLLMs can follow step-wise assembly manuals with diverse LEGO-style parts. Each step requires the model to interpret multi-view manual images, identify the next brick from visually similar candidates, and infer the target 3D pose in an evolving structure.
+      </p>
+      <figure class="project-figure medium-figure">
+        <img src="assets/benchmark_examples.webp" alt="Assembly target examples for a lion and little bonsai with top, front, right, and bottom manual views" />
+        <figcaption>
+          Example assembly trajectories. Red boxes highlight the brick to add at each step, while multi-view manuals expose geometric and affordance cues.
+        </figcaption>
+      </figure>
     </section>
 
-    <section id="method" class="section-narrow">
-      <h2 class="section-title">Brick-Composer Learning Framework</h2>
-      <p>
-        Brick-Composer improves assembly reasoning through three complementary supervision sources. Human Design Sparks provide affordance-rich demonstrations from real designs. World Feedback uses the simulator to reveal the visual and physical consequences of model actions. Synthetic Experience expands learning with collision-free, compact, procedurally generated structures.
+    <section id="method" class="section">
+      <h2>Brick-Composer Learning Framework</h2>
+      <p class="section-text">
+        Brick-Composer combines three complementary sources of supervision: affordance-rich human-designed assemblies, simulator-based world feedback for error recovery, and procedurally generated synthetic experiences for scalable spatial learning.
       </p>
-      <figure class="card image-card">
+      <figure class="project-figure method-figure">
         <img src="assets/method_overview.webp" alt="Method overview showing Human Design Sparks, World Feedback, and Synthetic Experiences" />
         <figcaption>
-          The learning pipeline moves from high-quality human-designed data, to simulator-based error recovery, to scalable synthetic experiences.
+          <strong>Figure 2:</strong> Overview of the Brick-Composer learning framework. We improve assembly reasoning through three complementary signals: Human design supervision, World feedback for error recovery, and scalable synthetic objects for experience expansion. Together, they substantially enhance the model’s assembly capabilities.
         </figcaption>
       </figure>
+    </section>
 
-      <div class="method-grid">
-        <article class="method-card blue">
-          <h3>Human Design Sparks</h3>
-          <p>Extract step-wise supervision from human-designed objects and render multi-view observations for brick selection and pose estimation.</p>
-        </article>
-        <article class="method-card green">
-          <h3>World Feedback</h3>
-          <p>Execute model predictions in the simulator, render the resulting state, highlight errors, and use correction trajectories for learning.</p>
-        </article>
-        <article class="method-card orange">
-          <h3>Synthetic Experience</h3>
-          <p>Sample bricks, attach them through feasible connection points, and filter by collision, connectivity, and density to scale supervision.</p>
-        </article>
+    <section id="results" class="section results-section">
+      <h2>Main Results</h2>
+      <p class="section-text">
+        The tables below reproduce the full final result tables from the paper, including both overall-average performance and best-object performance.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <caption>Table 2: Main evaluation of state-of-the-art MLLMs on BC-Bench.</caption>
+          <thead>
+            <tr class="group-row">
+              <th rowspan="2">Model</th>
+              <th colspan="4">Overall Average</th>
+              <th colspan="4">Best Object Performance</th>
+            </tr>
+            <tr>
+              <th>Selection ↑<br><span>Acc. (%)</span></th>
+              <th>PE Trans. ↓<br><span>Err. (LDU)</span></th>
+              <th>PE Rot. ↓<br><span>Err. (°)</span></th>
+              <th>Step-Wise ↑<br><span>SR (%)</span></th>
+              <th>Selection ↑<br><span>Acc. (%)</span></th>
+              <th>PE Trans. ↓<br><span>Err. (LDU)</span></th>
+              <th>PE Rot. ↓<br><span>Err. (°)</span></th>
+              <th>Step-Wise ↑<br><span>SR (%)</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Gemma-3-12B</td><td>4.35</td><td>269.09</td><td>63.00</td><td>0.09</td><td>17.24</td><td>41.86</td><td>12.86</td><td>2.22</td></tr>
+            <tr><td>InternVL-3.5-8B</td><td>13.24</td><td>221.69</td><td>88.43</td><td>0.00</td><td>31.25</td><td>41.54</td><td>35.00</td><td>0.00</td></tr>
+            <tr><td>Qwen-3-VL-8B</td><td>22.76</td><td>210.14</td><td>62.47</td><td>0.36</td><td>55.17</td><td>43.81</td><td>12.86</td><td>4.44</td></tr>
+            <tr><td>Qwen-3.5-VL-27B</td><td>37.44</td><td>314.32</td><td>82.94</td><td>0.18</td><td>75.86</td><td>64.47</td><td>34.84</td><td>4.44</td></tr>
+            <tr><td>GPT-5.4</td><td>43.88</td><td>310.78</td><td>74.85</td><td>0.18</td><td>93.10</td><td>67.94</td><td>40.00</td><td>2.22</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <caption>Table 3: Performance improvements on BC-Bench.</caption>
+          <thead>
+            <tr class="group-row">
+              <th rowspan="2">Approach</th>
+              <th colspan="4">Overall Average</th>
+              <th colspan="4">Best Object Performance</th>
+            </tr>
+            <tr>
+              <th>Selection ↑<br><span>Acc. (%)</span></th>
+              <th>PE Trans. ↓<br><span>Err. (LDU)</span></th>
+              <th>PE Rot. ↓<br><span>Err. (°)</span></th>
+              <th>Step-Wise ↑<br><span>SR (%)</span></th>
+              <th>Selection ↑<br><span>Acc. (%)</span></th>
+              <th>PE Trans. ↓<br><span>Err. (LDU)</span></th>
+              <th>PE Rot. ↓<br><span>Err. (°)</span></th>
+              <th>Step-Wise ↑<br><span>SR (%)</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="model-header"><td colspan="9">Performance Comparison of Learning Approaches for Model: Gemma-3-12B</td></tr>
+            <tr><td>Direct Prompting</td><td>4.35</td><td>269.09</td><td>63.00</td><td>0.09</td><td>17.24</td><td>41.86</td><td>12.86</td><td>2.22</td></tr>
+            <tr><td>World Feedback (P)</td><td>–</td><td>273.41</td><td>62.26</td><td>0.00</td><td>–</td><td>39.46</td><td>14.53</td><td>2.22</td></tr>
+            <tr><td>Designer Supervision</td><td>15.59</td><td>201.51</td><td>55.69</td><td>0.72</td><td>26.67</td><td>36.91</td><td>15.00</td><td>4.44</td></tr>
+            <tr><td>World Feedback (L)</td><td>–</td><td>170.33</td><td>51.49</td><td>1.99</td><td>–</td><td>27.56</td><td>12.86</td><td>9.07</td></tr>
+            <tr class="highlight"><td>Brick-Composer</td><td>17.95</td><td>123.69</td><td>45.43</td><td>4.35</td><td>52.87</td><td>24.63</td><td>12.86</td><td>18.75</td></tr>
+            <tr class="model-header"><td colspan="9">Performance Comparison of Learning Approaches for Model: Qwen-3-8B-VL</td></tr>
+            <tr><td>Direct Prompting</td><td>22.76</td><td>210.14</td><td>62.47</td><td>0.36</td><td>55.17</td><td>43.81</td><td>12.86</td><td>4.44</td></tr>
+            <tr><td>World Feedback (P)</td><td>–</td><td>226.33</td><td>65.66</td><td>0.27</td><td>–</td><td>42.36</td><td>12.86</td><td>4.44</td></tr>
+            <tr><td>Designer Supervision</td><td>48.29</td><td>162.82</td><td>57.81</td><td>5.40</td><td>73.24</td><td>27.13</td><td>12.95</td><td>8.92</td></tr>
+            <tr><td>World Feedback (L)</td><td>–</td><td>137.26</td><td>52.65</td><td>6.24</td><td>–</td><td>21.46</td><td>11.64</td><td>15.36</td></tr>
+            <tr class="highlight"><td>Brick-Composer</td><td>68.21</td><td>65.63</td><td>37.97</td><td>14.27</td><td>90.65</td><td>14.29</td><td>0.00</td><td>41.63</td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
-    <section id="results" class="section-wide soft-section">
-      <div class="section-narrow inner">
-        <h2 class="section-title">Main Results</h2>
-        <p>
-          General-purpose MLLMs show limited zero-shot assembly capability. Brick-Composer substantially improves selection accuracy, reduces translation and rotation errors, and raises strict step-wise success.
-        </p>
-
-        <div class="table-wrap">
-          <table>
-            <caption>State-of-the-art MLLMs on BC-Bench</caption>
-            <thead>
-              <tr><th>Model</th><th>Selection ↑</th><th>Trans. Err ↓</th><th>Rot. Err ↓</th><th>Step-Wise SR ↑</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Gemma-3-12B</td><td>4.35</td><td>269.09</td><td>63.00</td><td>0.09</td></tr>
-              <tr><td>InternVL-3.5-8B</td><td>13.24</td><td>221.69</td><td>88.43</td><td>0.00</td></tr>
-              <tr><td>Qwen-3-VL-8B</td><td>22.76</td><td>210.14</td><td>62.47</td><td>0.36</td></tr>
-              <tr><td>Qwen-3.5-VL-27B</td><td>37.44</td><td>314.32</td><td>82.94</td><td>0.18</td></tr>
-              <tr><td>GPT-5.4</td><td>43.88</td><td>310.78</td><td>74.85</td><td>0.18</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="table-wrap">
-          <table>
-            <caption>Learning approaches for Qwen-3-VL-8B</caption>
-            <thead>
-              <tr><th>Approach</th><th>Selection ↑</th><th>Trans. Err ↓</th><th>Rot. Err ↓</th><th>Step-Wise SR ↑</th><th>Best-object SR ↑</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Direct Prompting</td><td>22.76</td><td>210.14</td><td>62.47</td><td>0.36</td><td>4.44</td></tr>
-              <tr><td>Designer Supervision</td><td>48.29</td><td>162.82</td><td>57.81</td><td>5.40</td><td>8.92</td></tr>
-              <tr><td>World Feedback (L)</td><td>—</td><td>137.26</td><td>52.65</td><td>6.24</td><td>15.36</td></tr>
-              <tr class="highlight"><td>Brick-Composer</td><td>68.21</td><td>65.63</td><td>37.97</td><td>14.27</td><td>41.63</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <figure class="card image-card">
-          <img src="assets/overview_cases.webp" alt="Multi-view LDraw part examples and assembly target examples" />
-          <figcaption>
-            Diverse part geometry and object-level trajectories make assembly harder than simple text-to-brick generation: models must recognize fine-grained components and infer valid 3D placements.
-          </figcaption>
+    <section id="gallery" class="section wide-section gallery-section">
+      <h2>Qualitative Gallery</h2>
+      <p class="section-text">
+        We use a uniform gallery layout so all qualitative examples align cleanly. Each card shows the model comparison image, with the paper caption kept below in a compact format.
+      </p>
+      <div class="gallery-grid">
+        <figure class="gallery-item">
+          <div class="gallery-image-box"><img src="assets/case_main.webp" alt="Qualitative assembly comparison case from the main paper" /></div>
+          <figcaption><strong>Figure 3:</strong> Qualitative Examples of Model Assembly.</figcaption>
+        </figure>
+        <figure class="gallery-item">
+          <div class="gallery-image-box"><img src="assets/case_2.webp" alt="Additional qualitative assembly comparison" /></div>
+          <figcaption><strong>Figure 7:</strong> Additional qualitative examples of Brick-Composer assembly results. <details><summary>Full caption</summary>The generated assemblies show that the fine-tuned model can recover the overall structure and major components of target LEGO-style objects across multiple construction steps. These examples demonstrate the model’s improved ability to jointly select appropriate bricks and place them into coherent object-level assemblies.</details></figcaption>
+        </figure>
+        <figure class="gallery-item">
+          <div class="gallery-image-box"><img src="assets/case_3.webp" alt="Additional qualitative assembly comparison" /></div>
+          <figcaption><strong>Figure 8:</strong> Additional qualitative examples of Brick-Composer assembly results. <details><summary>Full caption</summary>The generated assemblies show that the fine-tuned model can recover the overall structure and major components of target LEGO-style objects across multiple construction steps. These examples demonstrate the model’s improved ability to jointly select appropriate bricks and place them into coherent object-level assemblies.</details></figcaption>
+        </figure>
+        <figure class="gallery-item">
+          <div class="gallery-image-box"><img src="assets/case_4.webp" alt="Additional qualitative assembly comparison" /></div>
+          <figcaption><strong>Figure 9:</strong> Additional qualitative examples of Brick-Composer assembly results.</figcaption>
         </figure>
       </div>
     </section>
 
-    <section id="demo" class="section-narrow">
-      <h2 class="section-title">Qualitative Gallery</h2>
-      <p>
-        The examples below compare GPT-5.4, Brick-Composer, and ground truth assemblies. Brick-Composer recovers more coherent object-level structure across multiple construction steps.
-      </p>
-
-      <div class="gallery-grid">
-        <figure class="gallery-item"><img src="assets/case_main.webp" alt="Qualitative assembly comparison case 1" /><figcaption>Qualitative result: car-like target.</figcaption></figure>
-        <figure class="gallery-item"><img src="assets/case_2.webp" alt="Qualitative assembly comparison case 2" /><figcaption>Qualitative result: multi-component structure.</figcaption></figure>
-        <figure class="gallery-item"><img src="assets/case_3.webp" alt="Qualitative assembly comparison case 3" /><figcaption>Qualitative result: compact structure.</figcaption></figure>
-        <figure class="gallery-item"><img src="assets/case_4.webp" alt="Qualitative assembly comparison case 4" /><figcaption>Qualitative result: object with curved and transparent parts.</figcaption></figure>
-      </div>
-
-      <h3 class="subsection-title">Synthetic Experience Data</h3>
-      <figure class="card image-card">
+    <section id="synthetic" class="section">
+      <h2>Synthetic Experience Data</h2>
+      <figure class="project-figure synthetic-figure">
         <img src="assets/synthetic_data.webp" alt="Examples of synthesized assembly configurations with steps 0 through 8" />
         <figcaption>
-          Synthetic structures are generated by iteratively attaching sampled bricks through feasible connection positions, while filtering invalid placements with collision avoidance and structural connectivity checks.
+          <strong>Figure 6:</strong> Examples of synthesized assembly configurations used for synthetic experience learning. Each structure is generated by incrementally attaching sampled bricks through feasible connection positions, while filtering invalid placements based on collision avoidance and structural connectivity. A density preference further encourages compact layouts, allowing the synthesized data to provide diverse and scalable supervision for brick selection and pose estimation.
         </figcaption>
       </figure>
     </section>
 
-    <section id="citation" class="section-narrow">
-      <h2 class="section-title">Citation</h2>
-      <p>Use the following BibTeX placeholder until the official arXiv or conference entry is available.</p>
+    <section id="assets" class="section text-section">
+      <h2>Images and Tables</h2>
+      <p>
+        Main figures and final result tables are bundled locally for easy GitHub upload. The table files are provided in both CSV and Markdown format, and the figures are available in the website assets folder.
+      </p>
+      <div class="asset-links">
+        <a href="assets/main_images_and_tables/table2_main_evaluation.csv">Table 2 CSV</a>
+        <a href="assets/main_images_and_tables/table3_learning_improvements.csv">Table 3 CSV</a>
+        <a href="assets/main_images_and_tables/tables.md">Tables Markdown</a>
+        <a href="assets/task_setting.png">Figure 1 PNG</a>
+        <a href="assets/method_overview.png">Figure 2 PNG</a>
+        <a href="assets/synthetic_data.png">Synthetic Data PNG</a>
+      </div>
+    </section>
+
+    <section id="citation" class="section text-section">
+      <h2>Citation</h2>
       <pre><code>@misc{liu2026brickcomposer,
   title  = {Brick-Composer: MLLMs Construct Everything from Building Blocks},
   author = {Liu, Jiateng and Li, Bingxuan and Wang, Zhenhailong and Wang, Rushi and Hong, Kaiwen and Qian, Cheng and Liu, Jiayu and Zhang, Denghui and Driggs-Campbell, Katherine and Li, Manling and Ji, Heng},
@@ -212,10 +222,6 @@
 }</code></pre>
     </section>
   </main>
-
-  <footer class="footer section-narrow">
-    <p>Website style inspired by modern brick-generation project pages, with all assets bundled locally for GitHub Pages deployment.</p>
-  </footer>
 
   <script src="script.js"></script>
 </body>

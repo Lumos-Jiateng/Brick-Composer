@@ -1,0 +1,6 @@
+Model,Overall Selection Acc. (%) ↑,Overall PE Trans. Err. (LDU) ↓,Overall PE Rot. Err. (°) ↓,Overall Step-Wise SR (%) ↑,Best Object Selection Acc. (%) ↑,Best Object PE Trans. Err. (LDU) ↓,Best Object PE Rot. Err. (°) ↓,Best Object Step-Wise SR (%) ↑
+Gemma-3-12B,4.35,269.09,63.00,0.09,17.24,41.86,12.86,2.22
+InternVL-3.5-8B,13.24,221.69,88.43,0.00,31.25,41.54,35.00,0.00
+Qwen-3-VL-8B,22.76,210.14,62.47,0.36,55.17,43.81,12.86,4.44
+Qwen-3.5-VL-27B,37.44,314.32,82.94,0.18,75.86,64.47,34.84,4.44
+GPT-5.4,43.88,310.78,74.85,0.18,93.10,67.94,40.00,2.22

@@ -1,27 +1,23 @@
 # Brick-Composer Project Page
 
-This folder contains a ready-to-use static website for the paper **Brick-Composer: MLLMs Construct Everything from Building Blocks**.
+This folder contains a static project website for **Brick-Composer: MLLMs Construct Everything from Building Blocks**.
 
-## Files
-
-- `index.html` - main project page
-- `style.css` - local CSS styling
-- `script.js` - lightweight image lightbox
-- `assets/` - paper PDF, figure images, favicon, and optimized web assets
-
-## Local preview
+## Preview locally
 
 ```bash
 python -m http.server 8000
 ```
 
-Then open `http://localhost:8000`.
+Open `http://localhost:8000`.
 
-## GitHub Pages deployment
+## Upload to GitHub
 
-Copy the whole folder content into the GitHub Pages branch or docs folder for `https://github.com/Lumos-Jiateng/Brick-Composer`, then enable GitHub Pages in repository settings.
+Copy the full contents of this folder into the GitHub repository or its `docs/` folder, then enable GitHub Pages in the repository settings.
 
-## Places to update later
+Main figures and table files are stored in:
 
-- Replace the BibTeX placeholder once the official arXiv/conference entry is available.
-- Add arXiv, dataset, poster, or demo links when they are public.
+```text
+assets/main_images_and_tables/
+```
+
+This folder includes PNG/WebP versions of the main paper figures plus CSV/Markdown versions of Table 2 and Table 3.
