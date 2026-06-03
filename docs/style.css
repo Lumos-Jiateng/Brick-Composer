@@ -232,7 +232,7 @@ pre {
   width: min(1180px, calc(100% - 40px));
 }
 .results-section {
-  width: min(1220px, calc(100% - 40px));
+  width: min(1050px, calc(100% - 40px));
 }
 .table-wrap {
   display: flex;
@@ -241,7 +241,7 @@ pre {
 }
 table {
   min-width: 0;
-  width: min(100%, 1160px);
+  width: min(100%, 980px);
   table-layout: fixed;
   font-size: 0.82rem;
   margin-left: auto;
