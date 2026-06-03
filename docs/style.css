@@ -100,6 +100,7 @@ h2 {
 .medium-figure { max-width: 780px; }
 .method-figure { max-width: 860px; }
 .synthetic-figure { max-width: 860px; }
+.gallery-main-figure { max-width: 100%; }
 .synthetic-figure img { width: 92%; }
 figcaption {
   max-width: 900px;
@@ -261,6 +262,7 @@ caption {
 }
 .gallery-section {
   padding-top: 28px;
+  width: min(1400px, calc(100% - 40px));
 }
 .gallery-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
