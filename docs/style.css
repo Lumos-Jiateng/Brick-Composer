@@ -100,7 +100,8 @@ h2 {
 .medium-figure { max-width: 780px; }
 .method-figure { max-width: 860px; }
 .synthetic-figure { max-width: 860px; }
-.gallery-main-figure { max-width: 100%; }
+.gallery-main-figure { width: 100%; max-width: 100%; }
+.gallery-main-figure img { width: 100%; height: auto; display: block; }
 .synthetic-figure img { width: 92%; }
 figcaption {
   max-width: 900px;
@@ -166,9 +167,8 @@ th span { font-weight: 400; font-size: 0.8rem; color: var(--muted); }
 }
 .gallery-item img {
   width: 100%;
-  aspect-ratio: 1.32 / 1;
-  object-fit: contain;
-  background: #ffffff;
+  height: auto;
+  display: block;
   cursor: zoom-in;
 }
 .gallery-item figcaption {
