@@ -100,8 +100,10 @@ h2 {
 .medium-figure { max-width: 780px; }
 .method-figure { max-width: 860px; }
 .synthetic-figure { max-width: 860px; }
-.gallery-main-figure { width: 100%; max-width: 100%; }
-.gallery-main-figure img { width: 100%; height: auto; display: block; }
+.gallery-main-figure { width: 100% !important; max-width: 100% !important; }
+.gallery-main-figure img { width: 100% !important; height: auto !important; display: block !important; }
+#gallery .project-figure { width: 100%; }
+#gallery .project-figure img { width: 100%; height: auto; }
 .synthetic-figure img { width: 92%; }
 figcaption {
   max-width: 900px;
