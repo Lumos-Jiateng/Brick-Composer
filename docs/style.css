@@ -319,6 +319,30 @@ summary {
   background: #ffffff;
 }
 
+.synthetic-row {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-top: 24px;
+}
+.synthetic-col {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+.synthetic-col img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  display: block;
+}
+.synthetic-col figcaption {
+  margin-top: 10px;
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 @media (max-width: 980px) {
   .results-section, .wide-section { width: min(100% - 24px, 980px); }
   .table-wrap { overflow-x: auto; justify-content: flex-start; }
@@ -326,4 +350,5 @@ summary {
   .gallery-grid { grid-template-columns: 1fr; }
   .gallery-image-box { height: auto; min-height: 240px; }
   .gallery-image-box img { height: auto; }
+  .synthetic-row { flex-direction: column; }
 }
