@@ -8,6 +8,14 @@ Jiateng Liu, Bingxuan Li, Zhenhailong Wang, Rushi Wang, Kaiwen Hong, Cheng Qian,
 
 UIUC · Stevens Institute of Technology · Northwestern University
 
+> [!NOTE]
+> **This repository was created and organized with the help of an AI assistant.** While we have
+> done our best to keep the code and dataset links correct and reproducible, some rough edges may
+> remain. If you hit any problems, inconsistencies, or replication difficulties, please
+> [open an issue](https://github.com/Lumos-Jiateng/Brick-Composer/issues) — we're happy to help.
+
+**Quick links:** [📦 Datasets](#datasets) · [🧪 Evaluation Code](#evaluation-code) · [🏋️ Training](#training)
+
 ---
 
 ## About
@@ -18,6 +26,12 @@ We study whether multimodal large language models (MLLMs) can read arbitrary des
 - **Brick Pose Estimation** — predict where (position) and how (6-DoF orientation) the selected brick should be placed.
 
 We introduce **BC-Bench**, a benchmark for evaluating MLLMs on assembly with diverse bricks, and propose **Brick-Composer**, a learning framework combining **Human Design Sparks**, **World Feedback**, and **Synthetic Experience**.
+
+<p align="center">
+  <img src="docs/assets/task_setting.png" width="90%" alt="BC-Bench task setting: brick selection (left) and brick pose estimation (right)" />
+  <br/>
+  <em>Overview of the BC-Bench task setting. <b>Left:</b> brick selection — the model picks the required brick from a candidate grid. <b>Right:</b> brick pose estimation — given the manual context, current state, and the selected brick, the model predicts its target pose (translation vector + rotation matrix).</em>
+</p>
 
 ## Key Results
 
@@ -36,55 +50,51 @@ All datasets are hosted on the Hugging Face Hub under [`Lumos-Jiateng`](https://
 | Dataset | Hub repo | What it contains |
 |---|---|---|
 | **Brick / Design data** | [`Lumos-Jiateng/bricklink_lego_design`](https://huggingface.co/datasets/Lumos-Jiateng/bricklink_lego_design) | BrickLink part library and per-object LEGO designs (the brick vocabulary and source designs). |
-| **Designer Supervision** | [`Lumos-Jiateng/designer_supervision`](https://huggingface.co/datasets/Lumos-Jiateng/designer_supervision) | Step-by-step supervision (renders + selection/pose ground truth) for 102 real, human-designed objects — the *Human Design Sparks* signal. |
 | **Synthetic Experience** | [`Lumos-Jiateng/brick_synthetic`](https://huggingface.co/datasets/Lumos-Jiateng/brick_synthetic) | Large-scale synthetic assembly trajectories for the *Synthetic Experience* stage. |
+| **Designer Supervision** | [`Lumos-Jiateng/brick_synthetic`](https://huggingface.co/datasets/Lumos-Jiateng/brick_synthetic) | Step-by-step supervision (renders + selection/pose ground truth) for 102 real, human-designed objects — the *Human Design Sparks* signal. |
+
+> [!IMPORTANT]
+> The **Designer Supervision** data (the *Human Design Sparks* split) is **also packaged inside the
+> [`Lumos-Jiateng/brick_synthetic`](https://huggingface.co/datasets/Lumos-Jiateng/brick_synthetic)
+> repository**, so you can obtain both the synthetic trajectories and the real human-designed
+> supervision from a single download.
 
 Quick download example:
 
-```bash
-# e.g. the Designer Supervision archive
-hf download Lumos-Jiateng/designer_supervision Designer_supervision.zip \
-  --repo-type dataset --local-dir .
-unzip Designer_supervision.zip
-```
-
 ```python
 from huggingface_hub import snapshot_download
+# Synthetic experience + Designer Supervision (human design sparks) in one place
 snapshot_download(repo_id="Lumos-Jiateng/brick_synthetic", repo_type="dataset")
+# Brick / design library
+snapshot_download(repo_id="Lumos-Jiateng/bricklink_lego_design", repo_type="dataset")
 ```
 
-## Repository layout
+<p align="center">
+  <img src="docs/assets/benchmark_examples.png" width="90%" alt="Example assembly trajectories with multi-view manuals and per-step target bricks" />
+  <br/>
+  <em>Example assembly trajectories in BC-Bench. Red boxes highlight the brick to add at each step, while multi-view manuals expose geometric and affordance cues.</em>
+</p>
 
-```
-Brick-Composer/
-├── README.md
-├── docs/                                   # project website (GitHub Pages source)
-└── reasoning/                              # evaluation code for the two subtasks
-    ├── MLLM_Brick_Selection/               # Brick Selection eval pipeline
-    │   ├── prompt.py                        # system prompt + user-message builder
-    │   ├── api_client.py                    # vLLM endpoint config + call_model()
-    │   ├── run.py                           # main selection pipeline
-    │   ├── evaluate.py                       # selection metrics
-    │   ├── evaluate_with_color.py           # color-aware selection metrics
-    │   └── eval_test_split.py
-    └── MLLM_Brick_Pose_Estimation/         # Brick Pose Estimation eval pipeline
-        ├── api_client.py                    # vLLM endpoint config + call_model()
-        ├── evaluate_assembly.py             # main inference + evaluation
-        ├── pose_metrics.py                  # translation + symmetry-aware rotation error
-        ├── compute_success_rate.py          # step-wise success rate
-        ├── reeval_with_symmetry.py
-        ├── aggregate_by_object.py
-        └── run_*.sh                         # per-model run scripts
-```
+<p align="center">
+  <img src="docs/assets/synthetic_data.png" width="90%" alt="Synthesized assembly configurations across construction steps" />
+  <br/>
+  <em>Synthesized assembly configurations used for the Synthetic Experience stage. Structures are grown by incrementally attaching sampled bricks at feasible connection points, filtering invalid placements via collision and connectivity checks.</em>
+</p>
 
-See [`reasoning/MLLM_Brick_Selection/README.md`](reasoning/MLLM_Brick_Selection/README.md) and
-[`reasoning/MLLM_Brick_Pose_Estimation/README.md`](reasoning/MLLM_Brick_Pose_Estimation/README.md)
-for per-task instructions.
+## Method
 
-## Getting started
+Brick-Composer combines three complementary sources of supervision: affordance-rich human-designed assemblies (**Human Design Sparks**), simulator-based **World Feedback** for error recovery, and procedurally generated **Synthetic Experience** for scalable spatial learning.
+
+<p align="center">
+  <img src="docs/assets/method_overview.png" width="92%" alt="Brick-Composer learning framework overview" />
+  <br/>
+  <em>The Brick-Composer learning framework improves assembly reasoning through three complementary signals — human design supervision, world feedback for error recovery, and scalable synthetic objects for experience expansion.</em>
+</p>
+
+## Evaluation Code
 
 The evaluation code talks to a local [vLLM](https://github.com/vllm-project/vllm)
-OpenAI-compatible server. The minimal client dependencies are:
+OpenAI-compatible server. Minimal client dependencies:
 
 ```bash
 pip install openai pillow
@@ -93,7 +103,7 @@ pip install openai pillow
 1. Serve a Vision-Language Model with vLLM (e.g. Qwen-3-VL) and note its host/port.
 2. Set the endpoint in the relevant `api_client.py`.
 3. Download the datasets above and point the scripts at the extracted folders.
-4. Run a subtask, e.g.:
+4. Run a subtask:
 
 ```bash
 # Brick Selection
@@ -102,6 +112,39 @@ cd reasoning/MLLM_Brick_Selection && python run.py
 # Brick Pose Estimation
 cd reasoning/MLLM_Brick_Pose_Estimation && bash run_real_synthetic.sh
 ```
+
+Per-task details:
+[`reasoning/MLLM_Brick_Selection`](reasoning/MLLM_Brick_Selection/README.md) ·
+[`reasoning/MLLM_Brick_Pose_Estimation`](reasoning/MLLM_Brick_Pose_Estimation/README.md).
+
+## Training
+
+We fine-tune the Vision-Language Models with **[LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory)**,
+which provides a clean and efficient pipeline for supervised fine-tuning of MLLMs. The Designer
+Supervision and Synthetic Experience data are converted into LLaMA-Factory's multimodal
+instruction format, and training is launched with its standard SFT recipes.
+
+At inference time, the fine-tuned checkpoints are served with **[vLLM](https://github.com/vllm-project/vllm)**
+via its OpenAI-compatible API; the evaluation scripts in this repo then query that endpoint (see
+each `api_client.py`).
+
+We gratefully acknowledge the [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) and
+[vLLM](https://github.com/vllm-project/vllm) teams — this work would not have been possible without
+their excellent open-source tooling.
+
+## Qualitative Examples
+
+<p align="center">
+  <img src="docs/assets/case_main.png" width="95%" alt="Qualitative assembly examples across multiple construction steps" />
+  <br/>
+  <em>Qualitative examples of model assembly. Brick-Composer recovers more coherent object-level structure across multiple construction steps.</em>
+</p>
+
+<p align="center">
+  <img src="docs/assets/more_cases.png" width="95%" alt="More qualitative assembly comparisons across diverse objects" />
+  <br/>
+  <em>More qualitative examples across diverse object types — from vehicles and animals to furniture and micro-builds.</em>
+</p>
 
 ## Citation
 
@@ -113,3 +156,10 @@ cd reasoning/MLLM_Brick_Pose_Estimation && bash run_real_synthetic.sh
   url    = {https://github.com/Lumos-Jiateng/Brick-Composer}
 }
 ```
+
+## Acknowledgements
+
+This project builds on [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) (training) and
+[vLLM](https://github.com/vllm-project/vllm) (serving). We thank the authors and maintainers of
+these projects. The repository and its documentation were organized with the assistance of an AI
+coding assistant.
