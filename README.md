@@ -117,12 +117,25 @@ Per-task details:
 [`reasoning/MLLM_Brick_Selection`](reasoning/MLLM_Brick_Selection/README.md) ·
 [`reasoning/MLLM_Brick_Pose_Estimation`](reasoning/MLLM_Brick_Pose_Estimation/README.md).
 
+> [!TIP]
+> The **prepared LLaMA-Factory data files** (already converted to the multimodal instruction
+> format used for fine-tuning and evaluation) are **included in the
+> [`Lumos-Jiateng/brick_synthetic`](https://huggingface.co/datasets/Lumos-Jiateng/brick_synthetic)
+> repository**. After downloading and unzipping the content, you only need to **update the image
+> paths** in those files to point to your local extraction directory — no reformatting required.
+
 ## Training
 
 We fine-tune the Vision-Language Models with **[LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory)**,
 which provides a clean and efficient pipeline for supervised fine-tuning of MLLMs. The Designer
 Supervision and Synthetic Experience data are converted into LLaMA-Factory's multimodal
 instruction format, and training is launched with its standard SFT recipes.
+
+The **ready-to-use LLaMA-Factory data files are already included in the
+[`Lumos-Jiateng/brick_synthetic`](https://huggingface.co/datasets/Lumos-Jiateng/brick_synthetic)
+repository**, so you do not need to regenerate them. After downloading and unzipping the dataset,
+the only required change is to **update the image paths** inside these files to match your local
+extraction directory; everything else (prompts, conversation structure, labels) is ready as-is.
 
 At inference time, the fine-tuned checkpoints are served with **[vLLM](https://github.com/vllm-project/vllm)**
 via its OpenAI-compatible API; the evaluation scripts in this repo then query that endpoint (see
@@ -138,12 +151,6 @@ their excellent open-source tooling.
   <img src="docs/assets/case_main.png" width="95%" alt="Qualitative assembly examples across multiple construction steps" />
   <br/>
   <em>Qualitative examples of model assembly. Brick-Composer recovers more coherent object-level structure across multiple construction steps.</em>
-</p>
-
-<p align="center">
-  <img src="docs/assets/more_cases.png" width="95%" alt="More qualitative assembly comparisons across diverse objects" />
-  <br/>
-  <em>More qualitative examples across diverse object types — from vehicles and animals to furniture and micro-builds.</em>
 </p>
 
 ## Citation
