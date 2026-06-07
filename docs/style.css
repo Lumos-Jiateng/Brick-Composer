@@ -363,3 +363,10 @@ summary {
   .gallery-image-box img { height: auto; }
   .synthetic-row { flex-direction: column; }
 }
+
+/* Make bold numbers in tables more visually prominent */
+td strong {
+  font-weight: 900;
+  color: #000;
+  letter-spacing: -0.01em;
+}
